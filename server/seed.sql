@@ -17,7 +17,7 @@ SELECT
   id,
   'FILA2024'
 FROM usuarios 
-WHERE email = 'fernando@fila.com'
+WHERE email = 'pedro@fila.com'
 ON CONFLICT DO NOTHING;
 
 -- Insertar usuario Melina
