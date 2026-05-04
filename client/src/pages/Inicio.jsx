@@ -6,10 +6,10 @@ import BottomNav from '../components/BottomNav';
 import ReadinessWidget from '../components/ReadinessWidget';
 import TeamReadiness from '../components/TeamReadiness';
 import { useNavigate } from 'react-router-dom';
-import { SparklesIcon, HeartIcon, DocumentTextIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon, HeartIcon, DocumentTextIcon, UserGroupIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 
 export default function Inicio() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { readiness, trend, loading, fetchReadinessToday, fetchTrend } = useReadiness();
   const navigate = useNavigate();
 
@@ -17,6 +17,11 @@ export default function Inicio() {
     fetchReadinessToday();
     fetchTrend();
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -44,13 +49,23 @@ export default function Inicio() {
     <div className="pb-24" style={{ backgroundColor: '#0f1117', minHeight: '100vh' }}>
       <div className="max-w-2xl mx-auto p-4">
         {/* Header */}
-        <div className="mt-6 mb-8">
-          <h1 className="text-3xl font-bold mb-1" style={{ color: '#c9d1d9' }}>
-            Hola, {user?.nombre?.split(' ')[0]}
-          </h1>
-          <p style={{ color: '#8b92a4' }}>
-            {dayName.charAt(0).toUpperCase() + dayName.slice(1)}, {dateStr}
-          </p>
+        <div className="mt-6 mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold mb-1" style={{ color: '#c9d1d9' }}>
+              Hola, {user?.nombre?.split(' ')[0]}
+            </h1>
+            <p style={{ color: '#8b92a4' }}>
+              {dayName.charAt(0).toUpperCase() + dayName.slice(1)}, {dateStr}
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-lg transition hover:opacity-80 mt-2"
+            style={{ backgroundColor: '#1a1f2e', color: '#8b92a4' }}
+            title="Cerrar Sesión"
+          >
+            <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+          </button>
         </div>
 
         {/* Readiness Widget */}

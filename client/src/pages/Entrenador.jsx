@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import useEntrenador from '../hooks/useEntrenador';
 import BottomNav from '../components/BottomNav';
+import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
 
 export default function Entrenador() {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const { atletas, tendencia, loading, fetchEquipo, fetchTendencia } = useEntrenador();
   const [lowReadinessCount, setLowReadinessCount] = useState(0);
 
@@ -13,6 +16,11 @@ export default function Entrenador() {
     fetchEquipo();
     fetchTendencia();
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   // Contar atletas con readiness < 40
   useEffect(() => {
@@ -49,13 +57,23 @@ export default function Entrenador() {
     <div className="pb-24" style={{ backgroundColor: '#0f1117', minHeight: '100vh' }}>
       <div className="max-w-2xl mx-auto p-4">
         {/* Header */}
-        <div className="mt-6 mb-6">
-          <h1 className="text-3xl font-bold mb-1" style={{ color: '#c9d1d9' }}>
-            Mi Equipo
-          </h1>
-          <p style={{ color: '#8b92a4' }}>
-            {atletas.length} atletas
-          </p>
+        <div className="mt-6 mb-6 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold mb-1" style={{ color: '#c9d1d9' }}>
+              Mi Equipo
+            </h1>
+            <p style={{ color: '#8b92a4' }}>
+              {atletas.length} atletas
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="p-2 rounded-lg transition hover:opacity-80 mt-2"
+            style={{ backgroundColor: '#1a1f2e', color: '#8b92a4' }}
+            title="Cerrar Sesión"
+          >
+            <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+          </button>
         </div>
 
         {/* Alerta si hay atletas con readiness bajo */}
