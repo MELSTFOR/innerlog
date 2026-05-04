@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: innerlog-api
+    runtime: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
+    envVars:
+      - key: DATABASE_URL
+        scope: run
+      - key: JWT_SECRET
+        value: innerlog_jwt_secret_2026_production_key_very_secure_random_string_12345
+      - key: FRONTEND_URL
+        value: https://innerlog-omega.vercel.app
+      - key: NODE_ENV
+        value: production
