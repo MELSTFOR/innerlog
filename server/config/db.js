@@ -2,13 +2,26 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 // Configuración de conexión a PostgreSQL
-const pool = new Pool({
-  user: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'password',
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'innerlog_db',
-});
+let poolConfig;
+
+if (process.env.DATABASE_URL) {
+  // Usar DATABASE_URL en producción (Render, Heroku, etc.)
+  poolConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  };
+} else {
+  // Usar variables individuales en desarrollo local
+  poolConfig = {
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'password',
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 5432,
+    database: process.env.DB_NAME || 'innerlog_db',
+  };
+}
+
+const pool = new Pool(poolConfig);
 
 // Manejo de errores de conexión
 pool.on('error', (err) => {
