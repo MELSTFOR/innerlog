@@ -36,7 +36,7 @@ export default function ReadinessWidget({ readiness, status }) {
       }}
     >
       <p style={{ color: '#8b92a4' }} className="mb-2">
-        Readiness Score de Hoy
+        Condición Física de Hoy
       </p>
 
       <div className="flex items-center justify-center gap-4 mb-4">

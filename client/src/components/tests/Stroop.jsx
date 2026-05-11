@@ -11,7 +11,7 @@ const STROOP_COLORS = [
 
 const STROOP_WORDS = ['rojo', 'azul', 'verde', 'amarillo', 'morado'];
 
-export default function StroopTest({ onComplete }) {
+export default function StroopTest({ onComplete, testDate }) {
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [currentStimulus, setCurrentStimulus] = useState(null);
@@ -106,6 +106,7 @@ export default function StroopTest({ onComplete }) {
       tr_min: Math.min(...reactionTimes),
       tr_max: Math.max(...reactionTimes),
       duracion: 60,
+      fecha: testDate,
     });
   };
 

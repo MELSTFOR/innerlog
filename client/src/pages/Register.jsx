@@ -22,6 +22,7 @@ export default function Register() {
   const roles = [
     { value: 'atleta', label: 'Atleta' },
     { value: 'entrenador', label: 'Entrenador' },
+    { value: 'psicologo_deportivo', label: 'Psicólogo Deportivo' },
     { value: 'club', label: 'Club' },
   ];
 
@@ -75,7 +76,7 @@ export default function Register() {
     );
 
     if (result.success) {
-      navigate('/dashboard');
+      navigate('/inicio');
     } else {
       setError(result.error);
     }

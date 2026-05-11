@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../utils/api';
 
 export const AuthContext = createContext();
@@ -16,6 +16,16 @@ export const AuthProvider = ({ children }) => {
     if (storedToken && storedUser) {
       setToken(storedToken);
       setUser(JSON.parse(storedUser));
+      
+      // Obtener datos actualizados del usuario incluyendo equipo
+      api.get('/auth/me', {
+        headers: { Authorization: `Bearer ${storedToken}` }
+      }).then(response => {
+        setUser(response.data.user);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      }).catch(err => {
+        console.error('Error al actualizar usuario:', err);
+      });
     }
 
     setLoading(false);
@@ -106,6 +116,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth debe ser usado dentro de AuthProvider');
+  }
+  return context;
 };
 
 export default AuthContext;

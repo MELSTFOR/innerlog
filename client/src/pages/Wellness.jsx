@@ -5,6 +5,10 @@ import BottomNav from '../components/BottomNav';
 export default function Wellness() {
   const { createWellness, fetchWellnessToday, wellnessToday, loading } = useWellness();
 
+  // Obtener fecha actual en formato YYYY-MM-DD
+  const today = new Date().toISOString().split('T')[0];
+
+  const [selectedDate, setSelectedDate] = useState(today);
   const [formData, setFormData] = useState({
     fatiga: 3,
     sueno: 3,
@@ -45,7 +49,10 @@ export default function Wellness() {
     setSuccess('');
     setSaving(true);
 
-    const result = await createWellness(formData);
+    const result = await createWellness({
+      ...formData,
+      fecha: selectedDate,
+    });
 
     if (result.success) {
       setSuccess('¡Wellness guardado exitosamente!');
@@ -116,6 +123,25 @@ export default function Wellness() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="p-6 rounded-lg" style={{ backgroundColor: '#1a1f2e' }}>
+            {/* Selector de Fecha */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2" style={{ color: '#c9d1d9' }}>
+                Fecha del Check-in
+              </label>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                max={today}
+                className="w-full px-4 py-2 rounded-lg border focus:outline-none"
+                style={{
+                  backgroundColor: '#0f1117',
+                  borderColor: '#30363d',
+                  color: '#c9d1d9',
+                }}
+              />
+            </div>
+
             <WellnessSlider
               label="Fatiga"
               value={formData.fatiga}

@@ -1,35 +1,35 @@
 import { useEffect, useState } from 'react';
 import useComunidad from '../hooks/useComunidad';
-import useKudos from '../hooks/useKudos';
 import { useAuth } from '../hooks/useAuth';
 import BottomNav from '../components/BottomNav';
-import { NewspaperIcon, CheckCircleIcon, TrophyIcon, HandThumbUpIcon } from '@heroicons/react/24/outline';
+import { NewspaperIcon, CheckCircleIcon, TrophyIcon, ChatBubbleLeftIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import api from '../utils/api';
 
 export default function Comunidad() {
   const { user } = useAuth();
   const { feed, reto, leaderboard, fetchFeed, fetchReto, fetchLeaderboard } = useComunidad();
-  const { ranking, sendKudo, fetchRanking } = useKudos();
   const [activeTab, setActiveTab] = useState('feed');
-  const [showKudoForm, setShowKudoForm] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [kudoMessage, setKudoMessage] = useState('');
-  const [allAtletas, setAllAtletas] = useState([]);
+  const [showConsignaForm, setShowConsignaForm] = useState(false);
+  const [consignas, setConsignas] = useState([]);
+  const [consignaContent, setConsignaContent] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchFeed();
     fetchReto();
     fetchLeaderboard();
-    fetchRanking();
+    fetchConsignas();
   }, []);
 
-  // Cuando se abre el tab de kudos, obtener lista de atletas
-  useEffect(() => {
-    if (activeTab === 'kudos' && allAtletas.length === 0) {
-      // Por ahora, mostramos los del leaderboard
-      setAllAtletas(ranking.filter((a) => a.id !== user?.id));
+  const fetchConsignas = async () => {
+    try {
+      const response = await api.get('/comunidad/consignas');
+      setConsignas(response.data.consignas || []);
+    } catch (error) {
+      console.error('Error al cargar consignas:', error);
     }
-  }, [activeTab, ranking]);
+  };
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -40,21 +40,24 @@ export default function Comunidad() {
     return date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
   };
 
-  const handleSendKudo = async () => {
-    if (!selectedUser) {
-      alert('Selecciona un compañero');
+  const handleSendConsigna = async () => {
+    if (!consignaContent.trim()) {
+      alert('Por favor escribe un mensaje');
       return;
     }
+    setLoading(true);
     try {
-      await sendKudo(selectedUser.id, kudoMessage);
-      setSuccessMessage('¡Kudo enviado! 🎉');
-      setShowKudoForm(false);
-      setSelectedUser(null);
-      setKudoMessage('');
+      await api.post('/comunidad/consignas', { contenido: consignaContent });
+      setSuccessMessage('¡Mensaje publicado! 🎉');
+      setShowConsignaForm(false);
+      setConsignaContent('');
       setTimeout(() => setSuccessMessage(''), 3000);
-      fetchRanking();
-    } catch {
-      // Error is handled in hook
+      await fetchConsignas();
+    } catch (error) {
+      console.error('Error al publicar:', error);
+      alert('Error al publicar el mensaje');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,7 +91,7 @@ export default function Comunidad() {
           <TabButton tab="feed" label="Feed" Icon={NewspaperIcon} />
           <TabButton tab="reto" label="Reto" Icon={CheckCircleIcon} />
           <TabButton tab="ranking" label="Ranking" Icon={TrophyIcon} />
-          <TabButton tab="kudos" label="Kudos" Icon={HandThumbUpIcon} />
+          <TabButton tab="consignas" label="Foro" Icon={ChatBubbleLeftIcon} />
         </div>
 
         {/* Content */}
@@ -290,8 +293,8 @@ export default function Comunidad() {
             </div>
           )}
 
-          {/* KUDOS TAB */}
-          {activeTab === 'kudos' && (
+          {/* FORO/CONSIGNAS TAB */}
+          {activeTab === 'consignas' && (
             <div>
               {successMessage && (
                 <div
@@ -302,13 +305,14 @@ export default function Comunidad() {
                 </div>
               )}
 
-              {!showKudoForm ? (
+              {!showConsignaForm ? (
                 <button
-                  onClick={() => setShowKudoForm(true)}
-                  className="w-full py-3 rounded-lg font-semibold transition mb-6"
+                  onClick={() => setShowConsignaForm(true)}
+                  className="w-full py-3 rounded-lg font-semibold transition mb-6 flex items-center justify-center gap-2"
                   style={{ backgroundColor: '#00d4ff', color: '#0f1117' }}
                 >
-                  Enviar Kudo a un Compañero
+                  <ChatBubbleLeftIcon className="w-5 h-5" />
+                  {user?.rol === 'psicologo_deportivo' ? 'Crear Consigna' : 'Escribir Mensaje'}
                 </button>
               ) : (
                 <div
@@ -316,61 +320,40 @@ export default function Comunidad() {
                   style={{ backgroundColor: '#1a1f2e' }}
                 >
                   <h3 style={{ color: '#c9d1d9' }} className="font-semibold mb-4">
-                    Enviar Kudo
+                    {user?.rol === 'psicologo_deportivo' ? 'Nueva Consigna' : 'Nuevo Mensaje'}
                   </h3>
 
-                  {/* Selector de compañero */}
+                  {/* Mensaje/Consigna */}
                   <label style={{ color: '#8b92a4' }} className="text-sm block mb-2">
-                    Selecciona un compañero:
-                  </label>
-                  <select
-                    value={selectedUser?.id || ''}
-                    onChange={(e) => {
-                      const user = allAtletas.find((a) => a.id === parseInt(e.target.value));
-                      setSelectedUser(user);
-                    }}
-                    className="w-full p-2 rounded mb-4 text-sm"
-                    style={{ backgroundColor: '#0f1117', color: '#c9d1d9', border: '1px solid #30363d' }}
-                  >
-                    <option value="">-- Selecciona --</option>
-                    {allAtletas.map((atleta) => (
-                      <option key={atleta.id} value={atleta.id}>
-                        {atleta.nombre}
-                      </option>
-                    ))}
-                  </select>
-
-                  {/* Mensaje */}
-                  <label style={{ color: '#8b92a4' }} className="text-sm block mb-2">
-                    Mensaje (opcional):
+                    {user?.rol === 'psicologo_deportivo' ? 'Consigna:' : 'Mensaje:'}
                   </label>
                   <textarea
-                    value={kudoMessage}
-                    onChange={(e) => setKudoMessage(e.target.value)}
-                    placeholder="Ej: ¡Excelente sesión hoy!"
+                    value={consignaContent}
+                    onChange={(e) => setConsignaContent(e.target.value)}
+                    placeholder={user?.rol === 'psicologo_deportivo' ? 'Ej: Realiza 5 series de respiración diafragmática...' : 'Ej: ¡Hoy tuve una buena sesión!'}
                     className="w-full p-2 rounded mb-4 text-sm resize-none"
-                    rows="3"
+                    rows="4"
                     style={{ backgroundColor: '#0f1117', color: '#c9d1d9', border: '1px solid #30363d' }}
                   />
 
                   {/* Botones */}
                   <div className="flex gap-2">
                     <button
-                      onClick={handleSendKudo}
-                      disabled={!selectedUser}
-                      className="flex-1 py-2 rounded font-semibold transition disabled:opacity-50"
+                      onClick={handleSendConsigna}
+                      disabled={loading || !consignaContent.trim()}
+                      className="flex-1 py-2 rounded font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
                       style={{
-                        backgroundColor: selectedUser ? '#31eb96' : '#8b92a4',
+                        backgroundColor: consignaContent.trim() ? '#31eb96' : '#8b92a4',
                         color: '#0f1117',
                       }}
                     >
-                      Enviar Kudo
+                      <SparklesIcon className="w-4 h-4" />
+                      Publicar
                     </button>
                     <button
                       onClick={() => {
-                        setShowKudoForm(false);
-                        setSelectedUser(null);
-                        setKudoMessage('');
+                        setShowConsignaForm(false);
+                        setConsignaContent('');
                       }}
                       className="flex-1 py-2 rounded font-semibold transition"
                       style={{ backgroundColor: '#30363d', color: '#c9d1d9' }}
@@ -381,28 +364,67 @@ export default function Comunidad() {
                 </div>
               )}
 
-              {/* Ranking de kudos */}
+              {/* Foro de Consignas y Posts */}
               <h3 style={{ color: '#c9d1d9' }} className="font-semibold mb-3">
-                Kudos del Equipo
+                Foro de la Comunidad
               </h3>
-              <div className="space-y-2">
-                {ranking.map((atleta, index) => (
+              <div className="space-y-3">
+                {consignas.length === 0 ? (
                   <div
-                    key={atleta.id}
-                    className="p-3 rounded-lg flex items-center justify-between"
-                    style={{ backgroundColor: '#1a1f2e' }}
+                    className="text-center py-8 rounded-lg"
+                    style={{ backgroundColor: '#1a1f2e', color: '#8b92a4' }}
                   >
-                    <span style={{ color: '#c9d1d9' }}>
-                      {atleta.nombre}
-                    </span>
-                    <span
-                      className="font-bold text-lg"
-                      style={{ color: '#ffd93d' }}
-                    >
-                      {atleta.kudos_recibidos} kudos
-                    </span>
+                    <ChatBubbleLeftIcon className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    <p>Sin mensajes aún. ¡Sé el primero!</p>
                   </div>
-                ))}
+                ) : (
+                  consignas.map((consigna) => {
+                    const isConsigna = consigna.tipo === 'consigna';
+                    const isByCurrentUser = consigna.usuario_id === user?.id;
+                    
+                    return (
+                      <div
+                        key={consigna.id}
+                        className="p-4 rounded-lg border-l-4"
+                        style={{
+                          backgroundColor: '#1a1f2e',
+                          borderLeftColor: isConsigna ? '#00d4ff' : '#8b92a4',
+                          borderLeftWidth: '3px'
+                        }}
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-2">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p style={{ color: '#c9d1d9' }} className="font-semibold">
+                                {consigna.usuario_nombre}
+                              </p>
+                              {isConsigna && (
+                                <span
+                                  className="px-2 py-0.5 text-xs rounded font-semibold flex items-center gap-1"
+                                  style={{ backgroundColor: '#00d4ff40', color: '#00d4ff' }}
+                                >
+                                  <SparklesIcon className="w-3 h-3" />
+                                  CONSIGNA
+                                </span>
+                              )}
+                            </div>
+                            <p style={{ color: '#8b92a4' }} className="text-sm">
+                              {formatDate(consigna.timestamp)}
+                            </p>
+                          </div>
+                          {isByCurrentUser && (
+                            <span style={{ color: '#8b92a4' }} className="text-xs">
+                              Tú
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ color: '#c9d1d9' }} className="mt-2">
+                          {consigna.contenido}
+                        </p>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           )}

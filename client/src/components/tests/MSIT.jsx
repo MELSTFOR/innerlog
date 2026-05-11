@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import useTests from '../../hooks/useTests';
 
-export default function MSITTest({ onComplete }) {
+export default function MSITTest({ onComplete, testDate }) {
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180); // 3 minutos
   const [stimulus, setStimulus] = useState(null);
@@ -111,6 +111,7 @@ export default function MSITTest({ onComplete }) {
       tr_min: Math.min(...reactionTimes),
       tr_max: Math.max(...reactionTimes),
       duracion: 180,
+      fecha: testDate,
     });
   };
 

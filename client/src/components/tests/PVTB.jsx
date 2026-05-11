@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import useTests from '../../hooks/useTests';
 
-export default function PVTBTest({ onComplete }) {
+export default function PVTBTest({ onComplete, testDate }) {
   const [phase, setPhase] = useState('ready'); // ready, waiting, stimulus, finished
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutos
   const [stimulus, setStimulus] = useState(null);
@@ -133,6 +133,7 @@ export default function PVTBTest({ onComplete }) {
       lapses,
       anticipaciones: anticipations,
       duracion: 300,
+      fecha: testDate,
     });
   };
 

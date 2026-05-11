@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useEntrenador from '../hooks/useEntrenador';
 import BottomNav from '../components/BottomNav';
-import { SparklesIcon, DocumentTextIcon, HeartIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon, DocumentTextIcon, HeartIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 export default function AtletaDetail() {
   const { id } = useParams();
@@ -82,13 +82,23 @@ export default function AtletaDetail() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="p-4 border-b" style={{ borderColor: '#30363d' }}>
-          <button
-            onClick={() => navigate(-1)}
-            className="text-sm mb-3"
-            style={{ color: '#00d4ff' }}
-          >
-            ← Volver
-          </button>
+          <div className="flex gap-2 mb-3">
+            <button
+              onClick={() => navigate('/')}
+              className="p-2 rounded-lg transition hover:opacity-80"
+              style={{ backgroundColor: '#1a1f2e', color: '#8b92a4' }}
+              title="Ir al Inicio"
+            >
+              <HomeIcon className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => navigate(-1)}
+              className="text-sm"
+              style={{ color: '#00d4ff' }}
+            >
+              ← Volver
+            </button>
+          </div>
           <h1 className="text-3xl font-bold mb-1" style={{ color: '#c9d1d9' }}>
             {atleta.nombre}
           </h1>
@@ -213,12 +223,11 @@ export default function AtletaDetail() {
 
                       {sesion.notas && (
                         <p
-                          style={{ color: '#8b92a4' }}
-                          className="text-sm italic border-t pt-2"
                           style={{
                             color: '#8b92a4',
                             borderTopColor: '#30363d',
                           }}
+                          className="text-sm italic border-t pt-2"
                         >
                           "{sesion.notas}"
                         </p>

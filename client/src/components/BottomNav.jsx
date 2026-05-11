@@ -37,7 +37,7 @@ export default function BottomNav() {
 
   // Tabs para entrenadores
   const coachNavItems = [
-    { path: '/entrenador', label: 'Mi Equipo', icon: 'people' },
+    { path: '/inicio', label: 'Inicio', icon: 'home' },
     { path: '/registro', label: 'Registro', icon: 'edit' },
     { path: '/historia', label: 'Historia', icon: 'history' },
     { path: '/wellness', label: 'Wellness', icon: 'fitness' },
@@ -45,7 +45,18 @@ export default function BottomNav() {
     { path: '/comunidad', label: 'Comunidad', icon: 'globe' },
   ];
 
-  const navItems = user?.rol === 'entrenador' ? coachNavItems : atletsNavItems;
+  // Tabs para psicólogo deportivo
+  const psychologistNavItems = [
+    { path: '/psicologo', label: 'Mis Atletas', icon: 'people' },
+    { path: '/comunidad', label: 'Comunidad', icon: 'globe' },
+  ];
+
+  let navItems = atletsNavItems;
+  if (user?.rol === 'entrenador') {
+    navItems = coachNavItems;
+  } else if (user?.rol === 'psicologo_deportivo') {
+    navItems = psychologistNavItems;
+  }
 
   const renderIcon = (iconName) => {
     const Icon = iconMap[iconName];

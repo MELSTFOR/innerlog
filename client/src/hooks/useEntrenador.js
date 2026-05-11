@@ -5,6 +5,8 @@ export const useEntrenador = () => {
   const [atletas, setAtletas] = useState([]);
   const [tendencia, setTendencia] = useState([]);
   const [atletaHistorial, setAtletaHistorial] = useState(null);
+  const [equipoPatterns, setEquipoPatterns] = useState(null);
+  const [intervencionesCompletadas, setIntervencionesCompletadas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,15 +58,51 @@ export const useEntrenador = () => {
     }
   }, []);
 
+  // Obtener patrones del equipo
+  const fetchEquipoPatterns = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await api.get('/entrenador/patrones-equipo');
+      setEquipoPatterns(response.data);
+      return response.data;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al cargar patrones');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Obtener intervenciones completadas esta semana
+  const fetchIntervencionesCompletadas = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await api.get('/entrenador/intervenciones/completadas');
+      setIntervencionesCompletadas(response.data.atletas);
+      return response.data.atletas;
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al cargar intervenciones');
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     atletas,
     tendencia,
     atletaHistorial,
+    equipoPatterns,
+    intervencionesCompletadas,
     loading,
     error,
     fetchEquipo,
     fetchTendencia,
     fetchAtletaHistorial,
+    fetchEquipoPatterns,
+    fetchIntervencionesCompletadas,
   };
 };
 
