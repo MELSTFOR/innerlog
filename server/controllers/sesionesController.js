@@ -12,6 +12,7 @@ const createSesion = async (req, res) => {
       fatiga_dia_siguiente,
       satisfaccion,
       notas,
+      fecha,
     } = req.body;
 
     // Validar que los valores estén entre 1 y 10
@@ -30,12 +31,20 @@ const createSesion = async (req, res) => {
       }
     }
 
+    // Crear timestamp: si viene fecha (YYYY-MM-DD), usarla; si no, usar hoy
+    let timestamp;
+    if (fecha) {
+      timestamp = new Date(`${fecha}T12:00:00Z`).toISOString();
+    } else {
+      timestamp = new Date().toISOString();
+    }
+
     const result = await db.query(
       `INSERT INTO sesiones_entrenamiento 
-       (usuario_id, esfuerzo_mental, enfoque, emocional, fatiga_carrera, fatiga_dia_siguiente, satisfaccion, notas)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       (usuario_id, esfuerzo_mental, enfoque, emocional, fatiga_carrera, fatiga_dia_siguiente, satisfaccion, notas, timestamp)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
-      [userId, esfuerzo_mental, enfoque, emocional, fatiga_carrera, fatiga_dia_siguiente, satisfaccion, notas]
+      [userId, esfuerzo_mental, enfoque, emocional, fatiga_carrera, fatiga_dia_siguiente, satisfaccion, notas, timestamp]
     );
 
     res.status(201).json({

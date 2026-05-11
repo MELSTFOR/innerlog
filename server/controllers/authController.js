@@ -30,6 +30,15 @@ const register = async (req, res) => {
 
     const user = result.rows[0];
 
+    // Obtener nombre del equipo si existe
+    let equipoNombre = null;
+    if (user.equipo_id) {
+      const equipoResult = await db.query('SELECT nombre FROM equipos WHERE id = $1', [user.equipo_id]);
+      if (equipoResult.rows.length > 0) {
+        equipoNombre = equipoResult.rows[0].nombre;
+      }
+    }
+
     // Generar JWT
     const token = jwt.sign(
       { id: user.id, email: user.email, rol: user.rol },
@@ -40,7 +49,17 @@ const register = async (req, res) => {
     res.status(201).json({
       message: 'Usuario registrado exitosamente',
       token,
-      user,
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        email: user.email,
+        rol: user.rol,
+        deporte: user.deporte,
+        nivel: user.nivel,
+        equipo_id: user.equipo_id,
+        equipo: equipoNombre,
+        created_at: user.created_at,
+      },
     });
   } catch (error) {
     console.error('Error en registro:', error);
@@ -72,6 +91,15 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
+    // Obtener nombre del equipo si existe
+    let equipoNombre = null;
+    if (user.equipo_id) {
+      const equipoResult = await db.query('SELECT nombre FROM equipos WHERE id = $1', [user.equipo_id]);
+      if (equipoResult.rows.length > 0) {
+        equipoNombre = equipoResult.rows[0].nombre;
+      }
+    }
+
     // Generar JWT
     const token = jwt.sign(
       { id: user.id, email: user.email, rol: user.rol },
@@ -90,6 +118,7 @@ const login = async (req, res) => {
         deporte: user.deporte,
         nivel: user.nivel,
         equipo_id: user.equipo_id,
+        equipo: equipoNombre,
         created_at: user.created_at,
       },
     });
@@ -113,9 +142,57 @@ const getMe = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    res.json({ user: result.rows[0] });
+    const user = result.rows[0];
+
+    // Obtener nombre del equipo si existe
+    let equipoNombre = null;
+    if (user.equipo_id) {
+      const equipoResult = await db.query('SELECT nombre FROM equipos WHERE id = $1', [user.equipo_id]);
+      if (equipoResult.rows.length > 0) {
+        equipoNombre = equipoResult.rows[0].nombre;
+      }
+    }
+
+    res.json({
+      user: {
+        id: user.id,
+        nombre: user.nombre,
+        email: user.email,
+        rol: user.rol,
+        deporte: user.deporte,
+        nivel: user.nivel,
+        equipo_id: user.equipo_id,
+        equipo: equipoNombre,
+        created_at: user.created_at,
+      },
+    });
   } catch (error) {
     console.error('Error en getMe:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
+
+// Actualizar actividad del usuario (last_activity)
+const updateActivity = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Actualizar el timestamp de última actividad
+    const result = await db.query(
+      'UPDATE usuarios SET last_activity = CURRENT_TIMESTAMP WHERE id = $1 RETURNING id, last_activity',
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    res.json({ 
+      message: 'Actividad actualizada',
+      last_activity: result.rows[0].last_activity 
+    });
+  } catch (error) {
+    console.error('Error al actualizar actividad:', error);
     res.status(500).json({ error: 'Error en el servidor' });
   }
 };
@@ -124,4 +201,5 @@ module.exports = {
   register,
   login,
   getMe,
+  updateActivity,
 };

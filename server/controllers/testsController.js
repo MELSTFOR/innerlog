@@ -13,6 +13,7 @@ const createTestSession = async (req, res) => {
       lapses,
       anticipaciones,
       duracion,
+      fecha,
     } = req.body;
 
     // Validar tipo_test
@@ -21,12 +22,20 @@ const createTestSession = async (req, res) => {
       return res.status(400).json({ error: 'Tipo de test inválido' });
     }
 
+    // Crear timestamp: si viene fecha (YYYY-MM-DD), usarla; si no, usar hoy
+    let timestamp;
+    if (fecha) {
+      timestamp = new Date(`${fecha}T12:00:00Z`).toISOString();
+    } else {
+      timestamp = new Date().toISOString();
+    }
+
     const result = await db.query(
       `INSERT INTO test_sessions 
-       (usuario_id, tipo_test, precision, tr_medio, tr_min, tr_max, lapses, anticipaciones, duracion)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       (usuario_id, tipo_test, precision, tr_medio, tr_min, tr_max, lapses, anticipaciones, duracion, timestamp)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING *`,
-      [userId, tipo_test, precision, tr_medio, tr_min, tr_max, lapses || 0, anticipaciones || 0, duracion]
+      [userId, tipo_test, precision, tr_medio, tr_min, tr_max, lapses || 0, anticipaciones || 0, duracion, timestamp]
     );
 
     res.status(201).json({

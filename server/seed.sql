@@ -34,6 +34,34 @@ FROM equipos
 WHERE nombre = 'Fila Running Team'
 ON CONFLICT (email) DO NOTHING;
 
+-- Insertar usuario Juan
+INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel, equipo_id)
+SELECT 
+  'Juan Martínez',
+  'juan@fila.com',
+  '$2a$10$MZ/UgGaYgRjpjkmm7Yl4EeFyaUsROH0MJGgni341W3n54QhJ2JhB.', -- contraseña: running123
+  'atleta',
+  'Atletismo',
+  'avanzado',
+  id
+FROM equipos 
+WHERE nombre = 'Fila Running Team'
+ON CONFLICT (email) DO NOTHING;
+
+-- Insertar usuario Sofia
+INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel, equipo_id)
+SELECT 
+  'Sofía García',
+  'sofia@fila.com',
+  '$2a$10$MZ/UgGaYgRjpjkmm7Yl4EeFyaUsROH0MJGgni341W3n54QhJ2JhB.', -- contraseña: running123
+  'atleta',
+  'Atletismo',
+  'intermedio',
+  id
+FROM equipos 
+WHERE nombre = 'Fila Running Team'
+ON CONFLICT (email) DO NOTHING;
+
 -- Insertar sesiones de entrenamiento (últimas 3 días)
 INSERT INTO sesiones_entrenamiento (usuario_id, esfuerzo_mental, enfoque, emocional, fatiga_carrera, fatiga_dia_siguiente, satisfaccion, notas)
 SELECT 

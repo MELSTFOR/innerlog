@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNERLOG - Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f9f9f9;
+    --text: #000000;
+    --muted: #333333;
+    --border: #cccccc;
+    --blue: #0071e3;
+    --radius: 8px;
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Georgia", serif;
+    font-size: 11pt;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: static;
+    background: var(--bg);
+    border-bottom: 2pt solid var(--text);
+    padding: 12pt 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30pt;
+    page-break-after: avoid;
+  }
+  
+  nav .logo {
+    font-size: 14pt;
+    font-weight: 700;
+    letter-spacing: 0;
+    color: var(--text);
+  }
+  
+  nav .nav-links {
+    display: none;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 20pt 0 40pt;
+    max-width: 800px;
+    margin: 0 auto;
+    page-break-after: avoid;
+  }
+  
+  .hero-subtitle {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12pt;
+  }
+  
+  .hero h1 {
+    font-size: 24pt;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 16pt;
+  }
+  
+  .hero p {
+    font-size: 12pt;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 600pt;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* SECTION */
+  .section {
+    max-width: 1000pt;
+    margin: 0 auto;
+    padding: 0 24pt 40pt;
+    page-break-inside: avoid;
+  }
+  
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12pt;
+    margin-bottom: 20pt;
+    padding-top: 30pt;
+    page-break-after: avoid;
+  }
+  
+  .section-num {
+    width: 24pt;
+    height: 24pt;
+    border-radius: 50%;
+    background: var(--text);
+    color: white;
+    font-size: 11pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  
+  .section-header h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin: 0;
+  }
+
+  /* FEATURE BLOCK */
+  .feature-block {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20pt;
+    align-items: start;
+    margin-bottom: 40pt;
+    page-break-inside: avoid;
+  }
+  
+  .feature-block.reverse {
+    direction: ltr;
+  }
+
+  .feature-text h3 {
+    font-size: 14pt;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-bottom: 10pt;
+    margin-top: 0;
+    line-height: 1.2;
+  }
+  
+  .feature-text p {
+    font-size: 11pt;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 10pt;
+  }
+  
+  .feature-text ul {
+    margin-left: 16pt;
+    margin-bottom: 12pt;
+    padding: 0;
+  }
+  
+  .feature-text li {
+    font-size: 11pt;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 6pt;
+  }
+
+  /* SCREENSHOT */
+  .feature-screenshot {
+    background: var(--surface);
+    border: 1pt solid var(--border);
+    border-radius: var(--radius);
+    padding: 24pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 350pt;
+    overflow: hidden;
+    page-break-inside: avoid;
+  }
+  
+  .feature-screenshot img {
+    width: 100%;
+    height: auto;
+    border-radius: 4pt;
+    object-fit: contain;
+    max-width: 100%;
+  }
+  
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1pt solid var(--border);
+    border-radius: var(--radius);
+    padding: 14pt;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+  
+  .card h3 {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-bottom: 8pt;
+    margin-top: 0;
+  }
+  
+  .card p {
+    color: var(--muted);
+    font-size: 11pt;
+    line-height: 1.6;
+    margin: 0 0 8pt 0;
+  }
+  
+  .card ul {
+    margin-left: 16pt;
+    margin-top: 8pt;
+    margin-bottom: 0;
+    padding: 0;
+  }
+  
+  .card li {
+    color: var(--muted);
+    font-size: 11pt;
+    line-height: 1.6;
+    margin-bottom: 4pt;
+  }
+
+  /* GALLERY */
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12pt;
+    margin-top: 20pt;
+    page-break-inside: avoid;
+  }
+  
+  .gallery-item {
+    background: var(--surface);
+    border: 1pt solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: auto;
+    page-break-inside: avoid;
+  }
+  
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* TWO COLUMN */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    margin-top: 20pt;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: #fffaf0;
+    border-left: 3pt solid var(--text);
+    padding: 12pt 14pt;
+    border-radius: 2pt;
+    margin: 20pt 0;
+    page-break-inside: avoid;
+  }
+  
+  .highlight p {
+    color: var(--text);
+    font-weight: 700;
+    margin: 0;
+    font-size: 11pt;
+    line-height: 1.6;
+  }
+
+  /* TAGS */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6pt;
+    margin-top: 8pt;
+  }
+  
+  .tag {
+    font-size: 10pt;
+    background: #f0f0f0;
+    color: var(--muted);
+    padding: 4pt 8pt;
+    border-radius: 12pt;
+    border: 1pt solid var(--border);
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1pt;
+    background: var(--border);
+    margin: 30pt 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1pt solid var(--border);
+    padding: 24pt;
+    text-align: center;
+    color: var(--muted);
+    font-size: 10pt;
+    margin-top: 40pt;
+  }
+
+  @media print {
+    nav { position: static; border: none; margin-bottom: 20pt; }
+    .feature-block, .two-col, .gallery { page-break-inside: avoid; }
+    .section { page-break-inside: avoid; }
+    body { margin: 0; padding: 0; font-size: 10pt; }
+  }
+
+  @media (max-width: 768px) {
+    .feature-block, .two-col, .gallery { grid-template-columns: 1fr; }
+    .feature-block.reverse { direction: ltr; }
+    nav .nav-links { display: none; }
+    .hero h1 { font-size: 32px; }
+    .section-header h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">INNERLOG</div>
+  <ul class="nav-links">
+    <li><a href="#acceso">Acceso</a></li>
+    <li><a href="#bienestar">Bienestar</a></li>
+    <li><a href="#sesiones">Sesiones</a></li>
+    <li><a href="#tests">Tests</a></li>
+    <li><a href="#historial">Historial</a></li>
+    <li><a href="#roles">Roles</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-subtitle">Plataforma de Entrenamiento Mental</div>
+  <h1>Entiende tu rendimiento real</h1>
+  <p>INNERLOG te ayuda a registrar, analizar y mejorar tu desempeño físico y mental a través de datos consistentes.</p>
+</section>
+
+<!-- ACCESO -->
+<section class="section" id="acceso">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Acceso a tu Cuenta</h2>
+  </div>
+  
+  <div class="feature-block">
+    <div class="feature-text">
+      <p>Cada cuenta es personalizada según tu rol: Atleta, Entrenador o Psicólogo.</p>
+    </div>
+    <div class="feature-screenshot">
+      <img src="images/Captura1.PNG" alt="Pantalla de Login">
+    </div>
+  </div>
+</section>
+
+<!-- BIENESTAR -->
+<section class="section" id="bienestar">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Check-in Diario de Bienestar</h2>
+  </div>
+  
+  <div class="feature-block reverse">
+    <div class="feature-text">
+      <p>Registra diariamente tu estado: fatiga, sueño, estrés y molestias.</p>
+      <p>Los datos se almacenan y el sistema identifica patrones en tu rendimiento.</p>
+    </div>
+    <div class="feature-screenshot">
+      <img src="images/Captura2.PNG" alt="Check-in Wellness">
+    </div>
+  </div>
+
+  <div class="highlight">
+    <p>Tus datos de bienestar son privados. Solo los compartimos con personas autorizadas.</p>
+  </div>
+</section>
+
+<!-- SESIONES -->
+<section class="section" id="sesiones">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Registro de Sesiones</h2>
+  </div>
+  
+  <div class="feature-block">
+    <div class="feature-text">
+      <h3>Documenta tus Entrenamientos</h3>
+      <p>Después de cada sesión, registra qué hiciste y cómo te sentiste.</p>
+      <p>Este historial ayuda a identificar qué tipo de entrenamientos funcionan mejor para ti.</p>
+      <ul>
+        <li>Tipo de entrenamiento</li>
+        <li>Esfuerzo mental</li>
+        <li>Enfoque y concentración</li>
+        <li>Cansancio emocional</li>
+        <li>Satisfacción general</li>
+      </ul>
+    </div>
+    <div class="feature-screenshot">
+      <img src="images/Captura3.PNG" alt="Registro de Sesión">
+    </div>
+  </div>
+</section>
+
+<!-- HISTORIAL -->
+<section class="section" id="historial">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Historial y Patrones</h2>
+  </div>
+  
+  <p>El sistema organiza todos tus registros en un historial completo. Puedes ver:</p>
+  
+  <div class="two-col">
+    <div class="card">
+      <h3>Evolución Semanal</h3>
+      <p>Gráficos que muestran cómo cambió tu estado en los últimos 7 días.</p>
+    </div>
+    <div class="card">
+      <h3>Tendencias Identificadas</h3>
+      <p>Patrones automáticos: qué factores afectan tu rendimiento.</p>
+    </div>
+  </div>
+
+  <div class="feature-screenshot" style="margin-top: 20pt;">
+    <img src="images/Captura4.PNG" alt="Historial Vacío">
+  </div>
+</section>
+
+<!-- TESTS -->
+<section class="section" id="tests">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Evaluaciones de Rendimiento</h2>
+  </div>
+  
+  <p>INNERLOG incluye pruebas diseñadas para medir tu rendimiento cognitivo y físico.</p>
+  
+  <div class="card">
+    <h3>Test Stroop</h3>
+    <p>Identifica el color de la palabra mostrada. Prueba tu concentración y control inhibitorio.</p>
+    <p><strong>Duración:</strong> 60 segundos</p>
+  </div>
+
+  <div class="card">
+    <h3>PVT-B (Psychomotor Vigilance Test)</h3>
+    <p>Reacciona lo más rápido posible ante estímulos visuales. Mide tu estado de alerta.</p>
+    <p><strong>Duración:</strong> 5 minutos</p>
+  </div>
+
+  <div class="card">
+    <h3>MSIT (Multi-Source Interference Task)</h3>
+    <p>Prueba de interferencia cognitiva y control ejecutivo. Requiere concentración bajo presión.</p>
+    <p><strong>Duración:</strong> 3-5 minutos</p>
+  </div>
+
+  <div class="highlight">
+    <p>Completa las evaluaciones en un ambiente tranquilo, sin distracciones. Los resultados se guardan automáticamente.</p>
+  </div>
+
+  <div class="feature-screenshot" style="margin-top: 20pt;">
+    <img src="images/Captura6.PNG" alt="Tests Cognitivos">
+  </div>
+</section>
+
+<!-- COMUNIDAD -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Comunidad y Conexión</h2>
+  </div>
+  
+  <div class="feature-block reverse">
+    <div class="feature-text">
+      <h3>Conecta con tu Equipo</h3>
+      <p>Comparte logros, motívate mutuamente y recibe apoyo de otros atletas.</p>
+      <ul>
+        <li>Publica tus avances</li>
+        <li>Da reconocimiento ("kudos")</li>
+        <li>Comenta en publicaciones</li>
+        <li>Mantente motivado</li>
+      </ul>
+    </div>
+    <div class="feature-screenshot">
+      <img src="images/Captura7.PNG" alt="Sección de Comunidad">
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD ATLETA -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Tu Dashboard Personal</h2>
+  </div>
+  
+  <p>Cuando ingresas como atleta, ves un resumen completo de tu estado actual.</p>
+  
+  <div class="feature-screenshot" style="margin-bottom: 20pt;">
+    <img src="images/Captura5.PNG" alt="Dashboard del Atleta">
+  </div>
+
+  <div class="card">
+    <h3>Disponibilidad Actual</h3>
+    <p>El sistema calcula si estás listo para entrenar o competir basándose en tu historial de bienestar.</p>
+  </div>
+  
+  <div class="card">
+    <h3>Resumen de Componentes</h3>
+    <p>Ves rápidamente cómo están tus aspectos de Bienestar, Cognitivo y de Sesión.</p>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section class="section" id="roles">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>Funciones por Rol</h2>
+  </div>
+
+  <div class="gallery">
+    <div class="card">
+      <h3>Atleta</h3>
+      <ul>
+        <li>Registra bienestar diario</li>
+        <li>Documenta sesiones</li>
+        <li>Realiza evaluaciones</li>
+        <li>Ve tu historial</li>
+        <li>Comparte en comunidad</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Entrenador</h3>
+      <ul>
+        <li>Supervisa a sus atletas</li>
+        <li>Compara rendimiento</li>
+        <li>Recibe alertas</li>
+        <li>Asigna evaluaciones</li>
+        <li>Genera reportes</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Psicólogo</h3>
+      <ul>
+        <li>Accede a atletas asignados</li>
+        <li>Analiza patrones emocionales</li>
+        <li>Registra intervenciones</li>
+        <li>Documenta progreso</li>
+        <li>Ofrece orientación</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3 style="margin-top: 30pt; margin-bottom: 12pt;">Vista de Psicólogo Deportivo</h3>
+  
+  <div class="gallery" style="grid-template-columns: 1fr 1fr;">
+    <div class="feature-screenshot">
+      <img src="images/Captura8.PNG" alt="Dashboard Psicólogo">
+    </div>
+    <div class="feature-screenshot">
+      <img src="images/Captura9.PNG" alt="Atletas en Seguimiento">
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 20pt;">
+    <h3>Gestión de Atletas</h3>
+    <p>El psicólogo deportivo puede ver todos los atletas asignados, revisar sus patrones emocionales y registrar intervenciones específicas.</p>
+  </div>
+</section>
+
+<!-- PRIVACIDAD -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2>Privacidad y Control de Datos</h2>
+  </div>
+
+  <div class="highlight">
+    <p>Tu información es confidencial. Solo compartimos lo que autorizas explícitamente.</p>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Quién Puede Ver Mis Datos</h3>
+      <ul>
+        <li>Tú: Todo tu perfil</li>
+        <li>Entrenador: Registros y patrones</li>
+        <li>Psicólogo: Solo si autorizas</li>
+        <li>Otros: Nunca sin permiso</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Exporta Tus Datos</h3>
+      <p>Puedes descargar toda tu información en cualquier momento. Eres dueño de tus datos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTAS FRECUENTES -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2>Preguntas Frecuentes</h2>
+  </div>
+
+  <div class="card">
+    <h3>¿Con qué frecuencia debo registrar?</h3>
+    <p>Una vez al día es lo ideal. Hazlo por la mañana para datos consistentes. Toma 2-3 minutos.</p>
+  </div>
+
+  <div class="card">
+    <h3>¿Qué pasa si olvido un día?</h3>
+    <p>No hay problema. Puedes agregar registros retroactivos. El sistema continúa funcionando normalmente.</p>
+  </div>
+
+  <div class="card">
+    <h3>¿Cuánto tiempo toman las evaluaciones?</h3>
+    <p>Entre 3 y 25 minutos según el tipo. El sistema te indica la duración antes de comenzar.</p>
+  </div>
+
+  <div class="card">
+    <h3>¿Mis datos son seguros?</h3>
+    <p>Sí. Toda la información está encriptada. No compartimos datos con terceros sin tu consentimiento.</p>
+  </div>
+
+  <div class="card">
+    <h3>¿Puedo cambiar mi contraseña?</h3>
+    <p>Sí. En configuración de tu cuenta encontrarás la opción. Usa una contraseña fuerte.</p>
+  </div>
+
+  <div class="card">
+    <h3>¿Cómo obtengo soporte?</h3>
+    <p>Contacta al administrador de tu equipo o usa el formulario de soporte en la aplicación.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>INNERLOG</strong> — Plataforma de análisis de rendimiento para atletas y equipos</p>
+  <p>Versión 2024 | <a href="#" style="color: var(--blue); text-decoration: none;">Política de Privacidad</a></p>
+</footer>
+
+</body>
+</html>

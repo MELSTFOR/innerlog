@@ -6,17 +6,17 @@ const getEquipo = async (req, res) => {
     const entrenadorId = req.user.id;
     const fecha = new Date().toISOString().split('T')[0];
 
-    // Obtener equipo_id del entrenador
-    const entrenadorResult = await db.query(
-      'SELECT equipo_id FROM usuarios WHERE id = $1',
+    // Obtener equipo_id del entrenador (a través de la tabla equipos)
+    const equipoResult = await db.query(
+      'SELECT id FROM equipos WHERE entrenador_id = $1',
       [entrenadorId]
     );
 
-    if (!entrenadorResult.rows[0]?.equipo_id) {
+    if (!equipoResult.rows[0]?.id) {
       return res.json({ atletas: [] });
     }
 
-    const equipoId = entrenadorResult.rows[0].equipo_id;
+    const equipoId = equipoResult.rows[0].id;
 
     // Obtener todos los atletas del equipo con readiness
     const result = await db.query(
@@ -100,11 +100,21 @@ const getAtletaHistorial = async (req, res) => {
       [atletaId]
     );
 
+    // Obtener intervenciones asignadas
+    const intervencionesResult = await db.query(
+      `SELECT id, tipo, titulo, descripcion, duracion_minutos, completada, fecha_asignacion, fecha_completada
+       FROM intervenciones
+       WHERE usuario_id = $1 AND asignada_por_entrenador = TRUE
+       ORDER BY fecha_asignacion DESC`,
+      [atletaId]
+    );
+
     res.json({
       atleta: atletaResult.rows[0],
       tests: testsResult.rows,
       sesiones: sesionesResult.rows,
       wellness: wellnessResult.rows,
+      intervenciones: intervencionesResult.rows,
     });
   } catch (error) {
     console.error('Error al obtener historial:', error);
@@ -157,4 +167,6 @@ module.exports = {
   getEquipo,
   getAtletaHistorial,
   getEquipoTendencia,
+  getEquipoPatterns: require('./patronesController').getTeamPatterns,
+  getWeekCompletedInterventions: require('./intervencionesController').getWeekCompletedInterventions
 };

@@ -322,8 +322,63 @@ const getLeaderboard = async (req, res) => {
   }
 };
 
+// Obtener todas las consignas de comunidad
+const getConsignas = async (req, res) => {
+  try {
+    const result = await db.query(
+      `SELECT 
+         c.id,
+         c.usuario_id,
+         c.contenido,
+         c.tipo,
+         c.timestamp,
+         u.nombre,
+         u.rol
+       FROM consignas_comunidad c
+       JOIN usuarios u ON c.usuario_id = u.id
+       ORDER BY c.timestamp DESC
+       LIMIT 50`
+    );
+
+    res.json({ consignas: result.rows });
+  } catch (error) {
+    console.error('Error al obtener consignas:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
+
+// Crear una consigna o post
+const crearConsigna = async (req, res) => {
+  try {
+    const { contenido } = req.body;
+    const usuarioId = req.user.id;
+    const usuario = req.user;
+
+    if (!contenido || contenido.trim().length === 0) {
+      return res.status(400).json({ error: 'El contenido no puede estar vacío' });
+    }
+
+    // Determinar tipo: si es psicólogo = consigna, si es atleta = post
+    const tipo = usuario.rol === 'psicologo_deportivo' ? 'consigna' : 'post';
+
+    const result = await db.query(
+      `INSERT INTO consignas_comunidad (usuario_id, contenido, tipo)
+       VALUES ($1, $2, $3)
+       RETURNING id, usuario_id, contenido, tipo, timestamp`,
+      [usuarioId, contenido, tipo]
+    );
+
+    res.status(201).json({ consigna: result.rows[0] });
+  } catch (error) {
+    console.error('Error al crear consigna:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
+
 module.exports = {
   getFeed,
   getRetoSemanal,
   getLeaderboard,
+  getConsignas,
+  crearConsigna,
 };

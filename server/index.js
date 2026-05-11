@@ -8,8 +8,12 @@ const wellnessRoutes = require('./routes/wellnessRoutes');
 const testsRoutes = require('./routes/testsRoutes');
 const readinessRoutes = require('./routes/readinessRoutes');
 const entrenadorRoutes = require('./routes/entrenadorRoutes');
+const psicologoRoutes = require('./routes/psicologoDeportivoRoutes');
 const comunidadRoutes = require('./routes/comunidadRoutes');
 const kudosRoutes = require('./routes/kudosRoutes');
+const patronesRoutes = require('./routes/patronesRoutes');
+const intervencionesRoutes = require('./routes/intervencionesRoutes');
+const reporteRoutes = require('./routes/reporteRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
@@ -37,16 +41,21 @@ app.use('/api/wellness', wellnessRoutes);
 app.use('/api/tests', testsRoutes);
 app.use('/api/readiness', readinessRoutes);
 app.use('/api/entrenador', entrenadorRoutes);
+app.use('/api/psicologo', psicologoRoutes);
 app.use('/api/comunidad', comunidadRoutes);
 app.use('/api/kudos', kudosRoutes);
+app.use('/api/patrones', patronesRoutes);
+app.use('/api/intervenciones', intervencionesRoutes);
+app.use('/api/reporte', reporteRoutes);
 
 // Ruta de salud
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Manejo de rutas no encontradas
+// Manejo de rutas no encontradas - con más logging
 app.use((req, res) => {
+  console.log(`⚠️  404 - ${req.method} ${req.path} (query: ${JSON.stringify(req.query)})`);
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 

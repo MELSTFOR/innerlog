@@ -10,4 +10,7 @@ router.post('/login', authController.login);
 // Rutas protegidas
 router.get('/me', authMiddleware, authController.getMe);
 
+// Actualizar actividad del usuario
+router.post('/update-activity', authMiddleware, authController.updateActivity);
+
 module.exports = router;

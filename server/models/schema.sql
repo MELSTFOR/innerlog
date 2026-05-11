@@ -6,10 +6,11 @@ CREATE TABLE IF NOT EXISTS usuarios (
   nombre VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
-  rol VARCHAR(50) NOT NULL DEFAULT 'atleta', -- 'atleta', 'entrenador', 'admin'
+  rol VARCHAR(50) NOT NULL DEFAULT 'atleta', -- 'atleta', 'entrenador', 'psicologo_deportivo', 'admin'
   deporte VARCHAR(100),
   nivel VARCHAR(50), -- 'principiante', 'intermedio', 'avanzado'
   equipo_id INTEGER,
+  last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -144,8 +145,23 @@ CREATE INDEX IF NOT EXISTS idx_retos_fecha_inicio ON retos(fecha_inicio);
 
 
 -- ===============================
--- TABLA: kudos
+-- TABLA: consignas_comunidad (Foro comunitario)
 -- ===============================
+CREATE TABLE IF NOT EXISTS consignas_comunidad (
+  id SERIAL PRIMARY KEY,
+  usuario_id INTEGER NOT NULL,
+  contenido TEXT NOT NULL,
+  tipo VARCHAR(50) NOT NULL DEFAULT 'post', -- 'consigna' (psicólogo), 'post' (atleta)
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_consignas_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- Índices
+CREATE INDEX IF NOT EXISTS idx_consignas_usuario_id ON consignas_comunidad(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_consignas_tipo ON consignas_comunidad(tipo);
+CREATE INDEX IF NOT EXISTS idx_consignas_timestamp ON consignas_comunidad(timestamp);
+
+-- TABLA LEGACY: kudos (mantener por compatibilidad)
 CREATE TABLE IF NOT EXISTS kudos (
   id SERIAL PRIMARY KEY,
   de_usuario_id INTEGER NOT NULL,
@@ -160,3 +176,28 @@ CREATE TABLE IF NOT EXISTS kudos (
 CREATE INDEX IF NOT EXISTS idx_kudos_de_usuario_id ON kudos(de_usuario_id);
 CREATE INDEX IF NOT EXISTS idx_kudos_a_usuario_id ON kudos(a_usuario_id);
 CREATE INDEX IF NOT EXISTS idx_kudos_timestamp ON kudos(timestamp);
+
+
+-- ===============================
+-- TABLA: intervenciones
+-- ===============================
+CREATE TABLE IF NOT EXISTS intervenciones (
+  id SERIAL PRIMARY KEY,
+  usuario_id INTEGER NOT NULL,
+  tipo VARCHAR(50) NOT NULL, -- 'respiracion', 'activacion', 'recuperacion'
+  titulo VARCHAR(255) NOT NULL,
+  descripcion TEXT,
+  duracion_minutos INTEGER,
+  completada BOOLEAN DEFAULT FALSE,
+  fecha_asignacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  fecha_completada TIMESTAMP,
+  nota_entrenador TEXT,
+  asignada_por_entrenador BOOLEAN DEFAULT FALSE,
+  CONSTRAINT fk_intervenciones_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+-- Índices
+CREATE INDEX IF NOT EXISTS idx_intervenciones_usuario_id ON intervenciones(usuario_id);
+CREATE INDEX IF NOT EXISTS idx_intervenciones_tipo ON intervenciones(tipo);
+CREATE INDEX IF NOT EXISTS idx_intervenciones_fecha_asignacion ON intervenciones(fecha_asignacion);
+CREATE INDEX IF NOT EXISTS idx_intervenciones_completada ON intervenciones(completada);

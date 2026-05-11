@@ -4,7 +4,7 @@ const db = require('../config/db');
 const createWellness = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { fatiga, sueno, dolor, estres } = req.body;
+    const { fatiga, sueno, dolor, estres, fecha } = req.body;
 
     // Validar valores entre 1 y 5
     const valores = [fatiga, sueno, dolor, estres];
@@ -14,11 +14,19 @@ const createWellness = async (req, res) => {
       }
     }
 
+    // Crear timestamp: si viene fecha (YYYY-MM-DD), usarla; si no, usar hoy
+    let timestamp;
+    if (fecha) {
+      timestamp = new Date(`${fecha}T12:00:00Z`).toISOString();
+    } else {
+      timestamp = new Date().toISOString();
+    }
+
     const result = await db.query(
-      `INSERT INTO wellness_entries (usuario_id, fatiga, sueno, dolor, estres)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO wellness_entries (usuario_id, fatiga, sueno, dolor, estres, timestamp)
+       VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [userId, fatiga, sueno, dolor, estres]
+      [userId, fatiga, sueno, dolor, estres, timestamp]
     );
 
     res.status(201).json({

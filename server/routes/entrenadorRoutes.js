@@ -17,4 +17,10 @@ router.get('/atleta/:id', entrenadorController.getAtletaHistorial);
 // GET - Obtener tendencia del equipo
 router.get('/tendencia', entrenadorController.getEquipoTendencia);
 
+// GET - Obtener patrones del equipo
+router.get('/patrones-equipo', entrenadorController.getEquipoPatterns);
+
+// GET - Obtener intervenciones completadas esta semana
+router.get('/intervenciones/completadas', entrenadorController.getWeekCompletedInterventions);
+
 module.exports = router;

@@ -15,4 +15,10 @@ router.get('/reto', comunidadController.getRetoSemanal);
 // GET - Leaderboard por racha
 router.get('/leaderboard', comunidadController.getLeaderboard);
 
+// GET - Obtener todas las consignas de comunidad
+router.get('/consignas', comunidadController.getConsignas);
+
+// POST - Crear una consigna o post
+router.post('/consignas', comunidadController.crearConsigna);
+
 module.exports = router;
