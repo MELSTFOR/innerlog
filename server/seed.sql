@@ -20,11 +20,25 @@ FROM usuarios
 WHERE email = 'pedro@fila.com'
 ON CONFLICT DO NOTHING;
 
--- Insertar usuario Melina
+-- Insertar usuario Melina Fila
 INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel, equipo_id)
 SELECT 
   'Melina Forgiarini',
   'melina@fila.com',
+  '$2a$10$MZ/UgGaYgRjpjkmm7Yl4EeFyaUsROH0MJGgni341W3n54QhJ2JhB.', -- contraseña: running123
+  'atleta',
+  'Atletismo',
+  'avanzado',
+  id
+FROM equipos 
+WHERE nombre = 'Fila Running Team'
+ON CONFLICT (email) DO NOTHING;
+
+-- Insertar usuario Melina Atleta (principal)
+INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel, equipo_id)
+SELECT 
+  'Melina Forgiarini',
+  'mforgiarini@atleta.com',
   '$2a$10$MZ/UgGaYgRjpjkmm7Yl4EeFyaUsROH0MJGgni341W3n54QhJ2JhB.', -- contraseña: running123
   'atleta',
   'Atletismo',
