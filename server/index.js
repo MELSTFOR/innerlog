@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
@@ -51,6 +54,57 @@ app.use('/api/reporte', reporteRoutes);
 // Ruta de salud
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+// Admin endpoint - ejecutar seed (SOLO PARA SETUP INICIAL)
+app.post('/api/admin/seed', async (req, res) => {
+  try {
+    const adminToken = req.headers['x-admin-token'];
+    const expectedToken = process.env.ADMIN_TOKEN || 'admin123';
+    
+    if (adminToken !== expectedToken) {
+      return res.status(401).json({ error: 'Unauthorized - Invalid admin token' });
+    }
+
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      return res.status(500).json({ error: 'DATABASE_URL not configured' });
+    }
+
+    const pool = new Pool({
+      connectionString: connectionString,
+      ssl: { rejectUnauthorized: false },
+    });
+
+    const client = await pool.connect();
+    console.log('🌱 Ejecutando seed...');
+
+    // Leer y ejecutar schema.sql
+    const schemaSQL = fs.readFileSync(path.join(__dirname, 'models', 'schema.sql'), 'utf8');
+    console.log('📋 Ejecutando schema.sql...');
+    await client.query(schemaSQL);
+    console.log('✓ Schema creado exitosamente');
+
+    // Leer y ejecutar seed.sql
+    const seedSQL = fs.readFileSync(path.join(__dirname, 'seed.sql'), 'utf8');
+    console.log('📋 Ejecutando seed.sql...');
+    await client.query(seedSQL);
+    console.log('✓ Datos de seed insertados exitosamente');
+
+    client.release();
+    await pool.end();
+
+    res.json({ 
+      message: 'Seed executed successfully',
+      status: 'completed'
+    });
+  } catch (error) {
+    console.error('❌ Error en seed:', error.message);
+    res.status(500).json({ 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
 });
 
 // Manejo de rutas no encontradas - con más logging
