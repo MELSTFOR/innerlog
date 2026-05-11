@@ -267,6 +267,11 @@ nav{
   margin-bottom:20px;
 }
 
+.story-image{
+  position:relative;
+  cursor:pointer;
+}
+
 .story-image img{
   width:100%;
   height:auto;
@@ -278,6 +283,128 @@ nav{
 
   box-shadow:
     0 30px 80px rgba(0,0,0,0.08);
+  
+  transition:all 0.4s ease;
+}
+
+.story-image:hover img{
+  box-shadow:
+    0 40px 120px rgba(0,0,0,0.15);
+  transform:scale(1.02);
+}
+
+.story-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(6px);
+  border-radius:32px;
+  opacity:1;
+  transition:all 0.4s ease;
+  pointer-events:none;
+}
+
+.story-image:hover .story-overlay{
+  opacity:0;
+}
+
+.story-overlay-text{
+  text-align:center;
+  color:white;
+}
+
+.story-overlay-text p{
+  font-size:18px;
+  font-weight:500;
+  letter-spacing:0.5px;
+  margin-bottom:8px;
+}
+
+.story-overlay-text span{
+  font-size:13px;
+  opacity:0.8;
+  display:block;
+  letter-spacing:0.1em;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,0.9);
+  animation:fadeIn 0.3s ease;
+}
+
+.modal.active{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.modal-content{
+  position:relative;
+  max-width:90%;
+  max-height:90vh;
+  background:white;
+  border-radius:24px;
+  overflow:hidden;
+  animation:zoomIn 0.4s ease;
+}
+
+.modal-content img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+
+.modal-close{
+  position:absolute;
+  top:20px;
+  right:20px;
+  width:44px;
+  height:44px;
+  background:rgba(0,0,0,0.6);
+  border:none;
+  border-radius:50%;
+  color:white;
+  font-size:28px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.2s ease;
+  z-index:10;
+}
+
+.modal-close:hover{
+  background:rgba(0,0,0,0.9);
+  transform:scale(1.1);
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes zoomIn{
+  from{
+    transform:scale(0.9);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
 }
 
 /* FEATURES */
@@ -572,8 +699,14 @@ footer{
 
     </div>
 
-    <div class="story-image">
+    <div class="story-image" onclick="openStoryModal()">
       <img src="images/innerlogexplain.png" alt="Bitácora">
+      <div class="story-overlay">
+        <div class="story-overlay-text">
+          <p>Haz click</p>
+          <span>para conocer la historia</span>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -772,6 +905,38 @@ footer{
   </div>
 
 </footer>
+
+<!-- MODAL -->
+<div id="storyModal" class="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeStoryModal()">&times;</button>
+    <img src="images/innerlogexplain.png" alt="Bitácora expandida">
+  </div>
+</div>
+
+<script>
+function openStoryModal(){
+  document.getElementById('storyModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStoryModal(){
+  document.getElementById('storyModal').classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+document.getElementById('storyModal').addEventListener('click', function(e){
+  if(e.target === this){
+    closeStoryModal();
+  }
+});
+
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape'){
+    closeStoryModal();
+  }
+});
+</script>
 
 </body>
 </html>
