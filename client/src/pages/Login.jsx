@@ -97,24 +97,6 @@ export default function Login() {
             <p className="text-xs xl:text-sm text-zinc-400 leading-relaxed max-w-md font-light mb-2">
               INNERLOG es tu bitácora deportiva y cognitiva. Aprende a desarrollar mentalidad, conciencia y herramientas para la vida a través del deporte.
             </p>
-
-            {/* Philosophy */}
-            <div className="mt-2 pt-2 border-t border-zinc-800/50">
-              <p className="text-xs tracking-[0.15em] text-zinc-600 uppercase font-medium mb-2">
-                Filosofía
-              </p>
-              <p className="text-xs text-zinc-500 italic font-light">
-                "El deporte tiene que hacerte más inteligente."
-              </p>
-            </div>
-          </div>
-
-          {/* Bottom Detail */}
-          <div className="flex items-center gap-4 pt-4 border-t border-zinc-800/30">
-            <div className="w-8 h-px bg-gradient-to-r from-cyan-400/30 to-transparent" />
-            <p className="text-xs text-zinc-600 tracking-[0.1em] uppercase">
-              Diseñado para atletas conscientes
-            </p>
           </div>
 
         </div>
