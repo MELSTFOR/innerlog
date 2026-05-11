@@ -1,3 +1,15 @@
+-- Insertar psicólogo deportivo
+INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel)
+VALUES (
+  'Psicólogo Deportivo',
+  'psicologo@gmail.com',
+  '$2a$10$2N230M/.3znqJl4ZreuXEetX6SzfrxDhwmxWSw8qMmafxiW4aebD.', -- contraseña: psicologo123
+  'psicologo_deportivo',
+  'Psicología',
+  'experto'
+)
+ON CONFLICT (email) DO NOTHING;
+
 -- Insertar entrenador para el equipo
 INSERT INTO usuarios (nombre, email, password_hash, rol, deporte, nivel)
 VALUES (
