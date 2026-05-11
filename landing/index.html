@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>INNERLOG</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+  --white:#ffffff;
+  --black:#000000;
+
+  --gray-1:#f5f5f7;
+  --gray-2:#fafafa;
+  --gray-3:#efefef;
+  --gray-4:#e5e5e7;
+  --gray-5:#d2d2d7;
+  --gray-6:#86868b;
+
+  --text:#1d1d1f;
+  --text-muted:#6e6e73;
+
+  --blue:#0071e3;
+  --blue-hover:#0077ed;
+
+  --radius:18px;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:var(--white);
+  color:var(--text);
+  font-family:'Inter', sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* NAV */
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+
+  height:56px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 40px;
+
+  background:rgba(255,255,255,0.72);
+
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+
+.logo{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:-0.03em;
+}
+
+.nav-links{
+  display:flex;
+  gap:32px;
+  list-style:none;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:var(--text-muted);
+  font-size:14px;
+  transition:0.2s ease;
+}
+
+.nav-links a:hover{
+  color:var(--text);
+}
+
+/* HERO */
+
+.hero{
+  max-width:1000px;
+  margin:0 auto;
+  text-align:center;
+
+  padding:140px 24px 120px;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+
+  padding:8px 14px;
+
+  background:var(--gray-1);
+
+  border-radius:999px;
+
+  color:var(--text-muted);
+
+  font-size:13px;
+  font-weight:500;
+
+  margin-bottom:28px;
+}
+
+.hero h1{
+  font-size:clamp(48px,9vw,88px);
+  line-height:1;
+  letter-spacing:-0.06em;
+  font-weight:700;
+
+  margin-bottom:28px;
+}
+
+.gradient{
+  background:linear-gradient(135deg,#0071e3 0%,#00c2ff 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+  max-width:720px;
+  margin:0 auto;
+
+  font-size:24px;
+  line-height:1.5;
+
+  color:var(--text-muted);
+}
+
+.cta-group{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+
+  margin-top:42px;
+}
+
+.btn{
+  border:none;
+  cursor:pointer;
+
+  padding:14px 24px;
+
+  border-radius:999px;
+
+  font-size:15px;
+  font-weight:500;
+
+  transition:0.2s ease;
+}
+
+.btn-primary{
+  background:var(--blue);
+  color:white;
+}
+
+.btn-primary:hover{
+  background:var(--blue-hover);
+}
+
+.btn-secondary{
+  background:var(--gray-1);
+  color:var(--text);
+}
+
+.btn-secondary:hover{
+  background:var(--gray-3);
+}
+
+.hero-note{
+  margin-top:22px;
+
+  font-size:14px;
+  color:var(--text-muted);
+}
+
+/* SECTION */
+
+.section{
+  max-width:1200px;
+  margin:0 auto;
+
+  padding:0 24px 160px;
+}
+
+.section-title{
+  font-size:clamp(36px,5vw,62px);
+  line-height:1.1;
+  letter-spacing:-0.05em;
+
+  margin-bottom:22px;
+}
+
+.section-description{
+  max-width:720px;
+
+  font-size:20px;
+  line-height:1.6;
+
+  color:var(--text-muted);
+
+  margin-bottom:80px;
+}
+
+/* FEATURE */
+
+.feature-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:90px;
+  align-items:center;
+}
+
+.feature-row.reverse{
+  direction:rtl;
+}
+
+.feature-row.reverse > *{
+  direction:ltr;
+}
+
+.feature-content h3{
+  font-size:42px;
+  line-height:1.1;
+  letter-spacing:-0.04em;
+
+  margin-bottom:22px;
+}
+
+.feature-content p{
+  font-size:18px;
+  line-height:1.8;
+
+  color:var(--text-muted);
+
+  margin-bottom:18px;
+}
+
+.feature-image img{
+  width:100%;
+  border-radius:28px;
+
+  display:block;
+
+  box-shadow:
+    0 20px 80px rgba(0,0,0,0.08);
+}
+
+/* DEMO */
+
+.demo-access{
+  display:flex;
+  justify-content:center;
+}
+
+.demo-box{
+  width:100%;
+  max-width:560px;
+
+  background:var(--gray-2);
+
+  border:1px solid var(--gray-4);
+
+  border-radius:36px;
+
+  padding:52px;
+  text-align:center;
+}
+
+.demo-label{
+  font-size:12px;
+  letter-spacing:0.14em;
+
+  color:var(--text-muted);
+
+  margin-bottom:20px;
+}
+
+.demo-box h2{
+  font-size:54px;
+  line-height:1;
+  letter-spacing:-0.05em;
+
+  margin-bottom:18px;
+}
+
+.demo-box p{
+  color:var(--text-muted);
+  line-height:1.7;
+  font-size:17px;
+}
+
+.demo-subtext{
+  margin-top:8px;
+  margin-bottom:38px;
+}
+
+.login-form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.login-form input{
+  width:100%;
+
+  padding:18px;
+
+  border-radius:16px;
+
+  border:1px solid var(--gray-4);
+
+  background:white;
+
+  font-size:16px;
+
+  outline:none;
+
+  transition:0.2s ease;
+}
+
+.login-form input:focus{
+  border-color:var(--blue);
+
+  box-shadow:
+    0 0 0 4px rgba(0,113,227,0.08);
+}
+
+.login-btn{
+  margin-top:10px;
+}
+
+.access-note{
+  margin-top:24px;
+
+  font-size:13px;
+
+  color:var(--text-muted);
+}
+
+/* FOOTER */
+
+footer{
+  padding:80px 24px;
+  border-top:1px solid var(--gray-4);
+}
+
+.footer-minimal{
+  max-width:1200px;
+  margin:0 auto;
+
+  text-align:center;
+}
+
+.footer-brand{
+  font-size:20px;
+  font-weight:600;
+
+  margin-bottom:16px;
+}
+
+.footer-text{
+  font-size:15px;
+  color:var(--text-muted);
+
+  margin-bottom:10px;
+}
+
+.footer-location{
+  font-size:13px;
+  color:var(--gray-6);
+}
+
+/* DIVIDER */
+
+.divider{
+  height:1px;
+  background:var(--gray-4);
+
+  margin:0 auto 140px;
+
+  width:calc(100% - 48px);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+  nav{
+    padding:0 20px;
+  }
+
+  .nav-links{
+    display:none;
+  }
+
+  .feature-row{
+    grid-template-columns:1fr;
+    gap:48px;
+  }
+
+  .hero{
+    padding:100px 20px 80px;
+  }
+
+  .hero p{
+    font-size:19px;
+  }
+
+  .section{
+    padding:0 20px 120px;
+  }
+
+  .demo-box{
+    padding:40px 28px;
+  }
+
+  .demo-box h2{
+    font-size:40px;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .cta-group{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+
+<nav>
+
+  <div class="logo">
+    INNERLOG
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="#idea">Proyecto</a></li>
+    <li><a href="#registro">Registro</a></li>
+    <li><a href="#cognitivo">Cognitivo</a></li>
+    <li><a href="#demo">Demo</a></li>
+  </ul>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-badge">
+    Proyecto en desarrollo
+  </div>
+
+  <h1>
+    No todo el
+    <span class="gradient">
+      rendimiento
+    </span>
+    se ve.
+  </h1>
+
+  <p>
+    INNERLOG explora la relación entre entrenamiento,
+    carga mental y toma de decisiones en deportistas amateurs.
+  </p>
+
+  <div class="cta-group">
+    <button class="btn btn-primary">
+      Solicitar acceso
+    </button>
+
+    <button class="btn btn-secondary">
+      Ver demo privada
+    </button>
+  </div>
+
+  <div class="hero-note">
+    Compartido actualmente con coaches, psicólogos y testers.
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 1 -->
+
+<section class="section" id="idea">
+
+  <h2 class="section-title">
+    Una bitácora pensada para observar patrones.
+  </h2>
+
+  <p class="section-description">
+    INNERLOG no busca reducir el entrenamiento a métricas.
+    La idea es registrar estados, hábitos y señales
+    que normalmente pasan desapercibidas.
+  </p>
+
+  <div class="feature-row">
+
+    <div class="feature-content">
+
+      <h3>
+        Registro diario
+      </h3>
+
+      <p>
+        Sueño, foco, claridad mental,
+        ansiedad, carga percibida y motivación.
+      </p>
+
+      <p>
+        Cada sesión deja información que puede ayudar
+        a entender cómo responde un deportista
+        con el paso del tiempo.
+      </p>
+
+    </div>
+
+    <div class="feature-image">
+      <img src="images/Captura1.PNG" alt="Registro diario">
+    </div>
+
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 2 -->
+
+<section class="section" id="registro">
+
+  <h2 class="section-title">
+    Estado general
+  </h2>
+
+  <p class="section-description">
+    Algunas veces el cuerpo entrena bien,
+    pero la mente no acompaña.
+  </p>
+
+  <div class="feature-row reverse">
+
+    <div class="feature-content">
+
+      <h3>
+        Visualizar tendencias
+      </h3>
+
+      <p>
+        INNERLOG intenta mostrar cómo cambian
+        ciertos estados a lo largo de semanas y meses.
+      </p>
+
+      <p>
+        No para etiquetar al deportista,
+        sino para entender contextos,
+        hábitos y momentos de mayor desgaste.
+      </p>
+
+    </div>
+
+    <div class="feature-image">
+      <img src="images/Captura2.PNG" alt="Estado general">
+    </div>
+
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 3 -->
+
+<section class="section" id="cognitivo">
+
+  <h2 class="section-title">
+    Herramientas cognitivas
+  </h2>
+
+  <p class="section-description">
+    Algunas dinámicas están inspiradas en ejercicios
+    utilizados en neurociencia y psicología cognitiva.
+  </p>
+
+  <div class="feature-row">
+
+    <div class="feature-content">
+
+      <h3>
+        Atención, reacción y toma de decisiones
+      </h3>
+
+      <p>
+        La intención no es diagnosticar
+        ni evaluar clínicamente.
+      </p>
+
+      <p>
+        Buscamos generar registros simples
+        que permitan observar cambios
+        de forma longitudinal.
+      </p>
+
+    </div>
+
+    <div class="feature-image">
+      <img src="images/Captura3.PNG" alt="Herramientas cognitivas">
+    </div>
+
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<!-- DEMO -->
+
+<section class="section" id="demo">
+
+  <div class="demo-access">
+
+    <div class="demo-box">
+
+      <div class="demo-label">
+        DEMO PRIVADA
+      </div>
+
+      <h2>
+        Acceso limitado
+      </h2>
+
+      <p>
+        INNERLOG todavía se encuentra en desarrollo.
+      </p>
+
+      <p class="demo-subtext">
+        Algunas funciones están siendo probadas
+        junto a profesionales del deporte
+        y salud mental.
+      </p>
+
+      <form class="login-form">
+
+        <p style="margin-bottom: 24px; color: var(--text-muted); text-align: center; line-height: 1.6;">
+          Para acceder a INNERLOG, necesitás solicitar una invitación.
+        </p>
+
+        <button type="button" class="btn btn-primary login-btn" onclick="window.open('https://wa.me/541166451302?text=Hola%20Quiero%20solicitar%20acceso%20a%20INNERLOG', '_blank')">
+          Solicitar acceso
+        </button>
+
+      </form>
+
+      <div class="access-note">
+        Acceso compartido únicamente con colaboradores y testers.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+  <div class="footer-minimal">
+
+    <div class="footer-brand">
+      INNERLOG
+    </div>
+
+    <div class="footer-text">
+      Proyecto experimental enfocado en deporte,
+      registro mental y observación cognitiva.
+    </div>
+
+    <div class="footer-location">
+      Buenos Aires, Argentina · 2026
+    </div>
+
+  </div>
+
+</footer>
+
+</body>
+</html>

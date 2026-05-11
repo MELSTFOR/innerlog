@@ -1,0 +1,14 @@
+{
+  "name": "innerlog-landing",
+  "version": 2,
+  "public": true,
+  "buildCommand": "",
+  "devCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
