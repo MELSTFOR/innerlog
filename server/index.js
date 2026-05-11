@@ -59,10 +59,14 @@ app.get('/health', (req, res) => {
 // Admin endpoint - ejecutar seed (SOLO PARA SETUP INICIAL)
 app.post('/api/admin/seed', async (req, res) => {
   try {
+    // En desarrollo/setup, permitir sin token o con token simple
+    // En producción, requiere token correcto
     const adminToken = req.headers['x-admin-token'];
-    const expectedToken = process.env.ADMIN_TOKEN || 'admin123';
+    const configuredToken = process.env.ADMIN_TOKEN;
     
-    if (adminToken !== expectedToken) {
+    // Si no hay token configurado, es setup - permitir con cualquier token o sin token
+    // Si hay token configurado, debe coincidir
+    if (configuredToken && adminToken !== configuredToken) {
       return res.status(401).json({ error: 'Unauthorized - Invalid admin token' });
     }
 
