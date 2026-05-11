@@ -83,13 +83,7 @@ app.post('/api/admin/seed', async (req, res) => {
     const client = await pool.connect();
     console.log('🌱 Ejecutando seed...');
 
-    // Leer y ejecutar schema.sql
-    const schemaSQL = fs.readFileSync(path.join(__dirname, 'models', 'schema.sql'), 'utf8');
-    console.log('📋 Ejecutando schema.sql...');
-    await client.query(schemaSQL);
-    console.log('✓ Schema creado exitosamente');
-
-    // Leer y ejecutar seed.sql
+    // SOLO leer y ejecutar seed.sql (schema ya debe existir)
     const seedSQL = fs.readFileSync(path.join(__dirname, 'seed.sql'), 'utf8');
     console.log('📋 Ejecutando seed.sql...');
     await client.query(seedSQL);
